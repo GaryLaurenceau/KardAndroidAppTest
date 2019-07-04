@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">KardTest</string>
+
+    <!-- Transactions Owner Type -->
+    <string name="transaction_owner_type_me">Me</string>
+    <string name="transaction_owner_type_Friends">Friends</string>
+
 </resources>

@@ -2,5 +2,13 @@
 <resources>
     <color name="colorPrimary">#008577</color>
     <color name="colorPrimaryDark">#00574B</color>
-    <color name="colorAccent">#D81B60</color>
+    <color name="colorAccent">#6E4EEC</color>
+
+    <!-- Layout -->
+    <color name="divider">#E3E5EA</color>
+
+    <!-- Text -->
+    <color name="text_primary">#1B1D20</color>
+    <color name="text_secondary">#80869E</color>
+
 </resources>

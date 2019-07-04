@@ -1,13 +1,17 @@
 package com.kard.test.app.ui
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toolbar
+import android.widget.ProgressBar
+import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.kard.test.app.R
+import com.kard.test.app.data.Transaction
 import com.kard.test.app.data.TransactionOwnerType
 import com.kard.test.app.ui.adapter.TransactionsAdapter
 
@@ -27,12 +31,15 @@ class TransactionsFragment: Fragment() {
     }
 
     // Members
+    private val transactions = ArrayList<Transaction>()
     private lateinit var type: TransactionOwnerType
+    // Dependencies injection (Usually injected with dagger2)
     private lateinit var adapter: TransactionsAdapter
 
     // Views
     private lateinit var toolbar: Toolbar
     private lateinit var list: RecyclerView
+    private lateinit var progressBar: ProgressBar
 
     // UI lifecycle
 
@@ -51,12 +58,40 @@ class TransactionsFragment: Fragment() {
         // Bind views
         toolbar = view.findViewById(R.id.toolbar)
         list = view.findViewById(R.id.list)
+        progressBar = view.findViewById(R.id.progress_bar)
 
+        setupToolbar()
         setupList()
     }
 
-    private fun setupList() {
+    override fun onResume() {
+        super.onResume()
+        loadData()
+    }
 
+    // Private helper
+
+    private fun loadData() {
+        if (transactions.isEmpty()) {
+            progressBar.visibility = View.VISIBLE
+        }
+
+
+    }
+
+    private fun setupToolbar() {
+        toolbar.title = getString(when (type) {
+            TransactionOwnerType.ME -> R.string.transaction_owner_type_me
+            TransactionOwnerType.FRIENDS -> R.string.transaction_owner_type_Friends
+        })
+        toolbar.setTitleTextColor(resources.getColor(R.color.colorAccent))
+    }
+
+    private fun setupList() {
+        // Replace with DI
+        adapter = TransactionsAdapter(context)
+        list.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
+        list.adapter = adapter
     }
 
 }

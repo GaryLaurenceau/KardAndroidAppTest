@@ -1,20 +1,28 @@
 package com.kard.test.app.ui.adapter
 
+import android.content.Context
+import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.kard.test.app.R
+import com.kard.test.app.data.Transaction
 
-class TransactionsAdapter: RecyclerView.Adapter<TransactionViewHolder>() {
+class TransactionsAdapter(context: Context?): RecyclerView.Adapter<TransactionViewHolder>() {
+
+    private val inflater: LayoutInflater = LayoutInflater.from(context)
+    var objects:ArrayList<Transaction> = ArrayList()
+    // var listener: IAdapterListener? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TransactionViewHolder {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return TransactionViewHolder(inflater.inflate(R.layout.item_transation, parent, false))
     }
 
     override fun onBindViewHolder(holder: TransactionViewHolder, position: Int) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        holder.show(objects[position])
     }
 
     override fun getItemCount(): Int {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return objects.size
     }
 
 }
