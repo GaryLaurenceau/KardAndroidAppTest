@@ -1,10 +1,9 @@
-package com.kard.test.app
+package com.kard.test.app.ui
 
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import com.kard.test.app.R
 import com.kard.test.app.data.TransactionOwnerType
-import com.kard.test.app.ui.TransactionsFragment
 
 class HomeActivity: AppCompatActivity() {
 

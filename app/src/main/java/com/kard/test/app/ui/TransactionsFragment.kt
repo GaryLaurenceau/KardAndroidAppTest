@@ -10,9 +10,11 @@ import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.kard.test.app.R
 import com.kard.test.app.data.Transaction
 import com.kard.test.app.data.TransactionOwnerType
+import com.kard.test.app.domain.KardNetworkClient
 import com.kard.test.app.ui.adapter.TransactionsAdapter
 
 class TransactionsFragment: Fragment() {
@@ -39,6 +41,7 @@ class TransactionsFragment: Fragment() {
     // Views
     private lateinit var toolbar: Toolbar
     private lateinit var list: RecyclerView
+    private lateinit var swipeToRefresh: SwipeRefreshLayout
     private lateinit var progressBar: ProgressBar
 
     // UI lifecycle
@@ -58,6 +61,7 @@ class TransactionsFragment: Fragment() {
         // Bind views
         toolbar = view.findViewById(R.id.toolbar)
         list = view.findViewById(R.id.list)
+        swipeToRefresh = view.findViewById(R.id.swipe_refresh_layout)
         progressBar = view.findViewById(R.id.progress_bar)
 
         setupToolbar()
@@ -67,6 +71,8 @@ class TransactionsFragment: Fragment() {
     override fun onResume() {
         super.onResume()
         loadData()
+
+        KardNetworkClient(context!!).getTransactions()
     }
 
     // Private helper
@@ -76,7 +82,7 @@ class TransactionsFragment: Fragment() {
             progressBar.visibility = View.VISIBLE
         }
 
-
+        // swipeToRefresh.isRefreshing = false
     }
 
     private fun setupToolbar() {
@@ -92,6 +98,12 @@ class TransactionsFragment: Fragment() {
         adapter = TransactionsAdapter(context)
         list.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
         list.adapter = adapter
+
+        // Swipe to refresh
+        swipeToRefresh.setOnRefreshListener {
+            swipeToRefresh.isRefreshing = true
+            loadData()
+        }
     }
 
 }
