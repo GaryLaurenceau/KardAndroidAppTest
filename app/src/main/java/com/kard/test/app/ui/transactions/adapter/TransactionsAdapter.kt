@@ -1,4 +1,4 @@
-package com.kard.test.app.ui.adapter
+package com.kard.test.app.ui.transactions.adapter
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.kard.test.app.MeQuery
 import com.kard.test.app.R
-import com.kard.test.app.ui.listener.TransactionClickListener
+import com.kard.test.app.ui.transactions.listener.TransactionClickListener
 
 class TransactionsAdapter(
     context: Context?,
@@ -17,7 +17,13 @@ class TransactionsAdapter(
     var objects:ArrayList<MeQuery.Edge> = ArrayList()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TransactionViewHolder {
-        return TransactionViewHolder(inflater.inflate(R.layout.item_transation, parent, false), transactionClickListener)
+        return TransactionViewHolder(
+            inflater.inflate(
+                R.layout.item_transation,
+                parent,
+                false
+            ), transactionClickListener
+        )
     }
 
     override fun onBindViewHolder(holder: TransactionViewHolder, position: Int) {

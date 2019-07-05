@@ -1,4 +1,4 @@
-package com.kard.test.app.ui.adapter
+package com.kard.test.app.ui.transactions.adapter
 
 import android.view.View
 import android.widget.ImageView
@@ -8,7 +8,7 @@ import com.bumptech.glide.Glide
 import com.kard.test.app.MeQuery
 import com.kard.test.app.R
 import com.kard.test.app.extensions.toText
-import com.kard.test.app.ui.listener.TransactionClickListener
+import com.kard.test.app.ui.transactions.listener.TransactionClickListener
 
 class TransactionViewHolder(
     view: View,
@@ -18,19 +18,18 @@ class TransactionViewHolder(
     // Views
     private val icon: ImageView = itemView.findViewById(R.id.icon)
     private val title: TextView = itemView.findViewById(R.id.title)
-    private val description: TextView = itemView.findViewById(R.id.description)
+    private val category: TextView = itemView.findViewById(R.id.category)
     private val amount: TextView = itemView.findViewById(R.id.amount)
 
     fun show(transaction: MeQuery.Edge) {
         // Icon
         Glide.with(itemView.context)
             .load(transaction.node()?.category()?.image()?.url())
-            .centerCrop()
             .into(icon)
 
-        // Title & description
+        // Title & category
         title.text = transaction.node()?.title()
-        description.text = transaction.node()?.description()
+        category.text = transaction.node()?.category()?.name()
 
         // Amount
         amount.text = transaction.node()?.amount()?.toText()
@@ -40,5 +39,4 @@ class TransactionViewHolder(
             transactionClickListener.onTransactionClick(transaction)
         }
     }
-
 }

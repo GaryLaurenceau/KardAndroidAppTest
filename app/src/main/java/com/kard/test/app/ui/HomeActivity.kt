@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.kard.test.app.R
 import com.kard.test.app.data.TransactionOwnerType
+import com.kard.test.app.ui.transactions.TransactionsFragment
 
 class HomeActivity: AppCompatActivity() {
 
@@ -22,5 +23,4 @@ class HomeActivity: AppCompatActivity() {
             .add(R.id.container, TransactionsFragment.newInstance(TransactionOwnerType.ME))
             .commit()
     }
-
 }

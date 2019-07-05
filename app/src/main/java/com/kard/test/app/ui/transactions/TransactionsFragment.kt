@@ -1,4 +1,4 @@
-package com.kard.test.app.ui
+package com.kard.test.app.ui.transactions
 
 import android.os.Bundle
 import android.util.Log
@@ -10,6 +10,8 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -18,8 +20,8 @@ import com.kard.test.app.R
 import com.kard.test.app.data.TransactionOwnerType
 import com.kard.test.app.domain.KardNetworkClient
 import com.kard.test.app.extensions.attachToPauseLifecycle
-import com.kard.test.app.ui.adapter.TransactionsAdapter
-import com.kard.test.app.ui.listener.TransactionClickListener
+import com.kard.test.app.ui.transactions.adapter.TransactionsAdapter
+import com.kard.test.app.ui.transactions.listener.TransactionClickListener
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
@@ -43,6 +45,7 @@ class TransactionsFragment: Fragment(), TransactionClickListener {
     private lateinit var type: TransactionOwnerType
     // Dependencies injection (Usually injected with dagger2)
     private lateinit var adapter: TransactionsAdapter
+    private lateinit var transactionsViewModel: TransactionsViewModel
 
     // Views
     private lateinit var toolbar: Toolbar
@@ -56,7 +59,14 @@ class TransactionsFragment: Fragment(), TransactionClickListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        type = TransactionOwnerType.fromBundle(arguments, EXTRA_TRANSACTION_OWNER_TYPE)
+
+        // Retrieve fragment parameters
+        type = TransactionOwnerType.fromBundle(arguments,
+            EXTRA_TRANSACTION_OWNER_TYPE
+        )
+
+        // Get ViewModel for fragment
+        transactionsViewModel = ViewModelProviders.of(this).get(TransactionsViewModel::class.java)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -74,39 +84,56 @@ class TransactionsFragment: Fragment(), TransactionClickListener {
         emptyListView = view.findViewById(R.id.empty)
         errorView = view.findViewById(R.id.error)
 
+        // Setup UI components
         setupToolbar()
         setupList()
+
+        // Update UI if needed
+        if (transactionsViewModel.transactions.isNotEmpty()) {
+            displayList(transactionsViewModel.transactions)
+        }
     }
 
     override fun onResume() {
         super.onResume()
+        // Every time fragment is displayed, fetch data
         loadData()
     }
 
     // Private helper
 
     private fun loadData() {
+        // Update progress bar if needed
         if (adapter.itemCount == 0 && !swipeToRefresh.isRefreshing) {
             progressBar.visibility = View.VISIBLE
         }
 
-        KardNetworkClient().getTransactions()
+        // Exec network call
+        KardNetworkClient().getTransactions(type)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ response ->
                 Log.d(TAG, "On success, my email is: ${response.data()?.me()?.email()}")
+
+                // Get transactions
                 val transactions = response.data()?.me()?.transactions()?.edges()
                 if (transactions != null && transactions.isNotEmpty()) {
+                    // Save list to ViewModel
+                    transactionsViewModel.transactions.clear()
+                    transactionsViewModel.transactions.addAll(transactions)
+
+                    // Update UI
                     displayList(transactions)
                 }
                 else {
+                    // UI Empty Screen
+                    transactionsViewModel.transactions.clear()
                     displayEmptyScreen()
                 }
-                progressBar.visibility = View.GONE
                 swipeToRefresh.isRefreshing = false
             }, { error ->
+                // Display and log error
                 displayError(error)
-                progressBar.visibility = View.GONE
                 swipeToRefresh.isRefreshing = false
             })
             .attachToPauseLifecycle(this)
@@ -140,28 +167,33 @@ class TransactionsFragment: Fragment(), TransactionClickListener {
         adapter.objects.clear()
         adapter.objects.addAll(transactions)
         adapter.notifyDataSetChanged()
+
         list.visibility = View.VISIBLE
         emptyListView.visibility = View.GONE
         errorView.visibility = View.GONE
+        progressBar.visibility = View.GONE
     }
 
     private fun displayEmptyScreen() {
         emptyListView.visibility = View.VISIBLE
         list.visibility = View.GONE
         errorView.visibility = View.GONE
+        progressBar.visibility = View.GONE
     }
 
     private fun displayError(error: Throwable) {
+        Log.e(TAG, "On failure: ${error.localizedMessage}")
+        errorView.text = error.localizedMessage
         errorView.visibility = View.VISIBLE
         emptyListView.visibility = View.GONE
         list.visibility = View.GONE
-        Log.e(TAG, "On failure: ${error.localizedMessage}")
+        progressBar.visibility = View.GONE
         error.printStackTrace()
     }
 
     // Adapter Listener
 
     override fun onTransactionClick(transaction: MeQuery.Edge) {
-        Toast.makeText(context, transaction.node()?.id(), Toast.LENGTH_SHORT).show()
+        Toast.makeText(context, transaction.node()?.description(), Toast.LENGTH_SHORT).show()
     }
 }

@@ -1,4 +1,4 @@
-package com.kard.test.app.ui.listener
+package com.kard.test.app.ui.transactions.listener
 
 import com.kard.test.app.MeQuery
 
