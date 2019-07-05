@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="70dp"
-    xmlns:tools="http://schemas.android.com/tools">
+    android:clickable="true"
+    android:foreground="?android:attr/selectableItemBackground"
+    >
 
     <!-- Icon -->
 
@@ -15,38 +19,43 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         android:layout_marginLeft="16dp"
+        android:scaleType="centerCrop"
         />
 
-    <!-- Label and details -->
+    <!-- Title and description -->
 
     <TextView
-        android:id="@+id/label"
+        android:id="@+id/title"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/details"
+        app:layout_constraintBottom_toTopOf="@+id/description"
         app:layout_constraintLeft_toRightOf="@+id/icon"
         app:layout_constraintRight_toLeftOf="@+id/amount"
         app:layout_constraintVertical_chainStyle="packed"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="2dp"
         android:textColor="@color/text_primary"
         android:textSize="16sp"
+        android:ellipsize="end"
+        android:maxLines="1"
         android:lines="1"
         tools:text="RATP"
         />
 
     <TextView
-        android:id="@+id/details"
+        android:id="@+id/description"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/label"
+        app:layout_constraintTop_toBottomOf="@+id/title"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="@+id/label"
-        app:layout_constraintRight_toRightOf="@+id/label"
+        app:layout_constraintLeft_toLeftOf="@+id/title"
+        app:layout_constraintRight_toRightOf="@+id/title"
         android:textColor="@color/text_secondary"
         android:textSize="12sp"
+        android:ellipsize="end"
+        android:maxLines="1"
         android:lines="1"
         tools:text="Money"
         />

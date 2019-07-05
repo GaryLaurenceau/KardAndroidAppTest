@@ -1,5 +1,42 @@
 query MeQuery {
     me {
         email
+        transactions {
+            edges {
+                cursor
+                node {
+                    id
+                    title
+                    description
+                    user { avatar {
+                        contentType
+                        url
+                        height
+                        width
+                    } }
+                    category {
+                        image {
+                            contentType
+                            url
+                            height
+                            width
+                        }
+                        name
+                    }
+                    amount {
+                        currency {
+                            name
+                            symbol
+                        }
+                        value
+                    }
+                }
+            }
+            pageInfo {
+                startCursor
+                endCursor
+                hasNextPage
+            }
+        }
     }
 }

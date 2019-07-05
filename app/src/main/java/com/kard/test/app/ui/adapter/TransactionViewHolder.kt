@@ -4,18 +4,41 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.kard.test.app.data.Transaction
+import com.bumptech.glide.Glide
+import com.kard.test.app.MeQuery
+import com.kard.test.app.R
+import com.kard.test.app.extensions.toText
+import com.kard.test.app.ui.listener.TransactionClickListener
 
-class TransactionViewHolder(view: View): RecyclerView.ViewHolder(view) {
+class TransactionViewHolder(
+    view: View,
+    private val transactionClickListener: TransactionClickListener
+): RecyclerView.ViewHolder(view) {
 
     // Views
-    private lateinit var icon: ImageView
-    private lateinit var label: TextView
-    private lateinit var details: TextView
-    private lateinit var amount: TextView
+    private val icon: ImageView = itemView.findViewById(R.id.icon)
+    private val title: TextView = itemView.findViewById(R.id.title)
+    private val description: TextView = itemView.findViewById(R.id.description)
+    private val amount: TextView = itemView.findViewById(R.id.amount)
 
-    fun show(transaction: Transaction) {
+    fun show(transaction: MeQuery.Edge) {
+        // Icon
+        Glide.with(itemView.context)
+            .load(transaction.node()?.category()?.image()?.url())
+            .centerCrop()
+            .into(icon)
 
+        // Title & description
+        title.text = transaction.node()?.title()
+        description.text = transaction.node()?.description()
+
+        // Amount
+        amount.text = transaction.node()?.amount()?.toText()
+
+        // Click listener
+        itemView.setOnClickListener {
+            transactionClickListener.onTransactionClick(transaction)
+        }
     }
 
 }
