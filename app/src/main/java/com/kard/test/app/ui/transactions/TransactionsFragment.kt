@@ -1,5 +1,6 @@
 package com.kard.test.app.ui.transactions
 
+import android.graphics.Rect
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -20,6 +21,7 @@ import com.kard.test.app.R
 import com.kard.test.app.data.TransactionOwnerType
 import com.kard.test.app.domain.KardNetworkClient
 import com.kard.test.app.extensions.attachToPauseLifecycle
+import com.kard.test.app.ui.common.SpacesItemDecoration
 import com.kard.test.app.ui.transactions.adapter.TransactionsAdapter
 import com.kard.test.app.ui.transactions.listener.TransactionClickListener
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -48,7 +50,6 @@ class TransactionsFragment: Fragment(), TransactionClickListener {
     private lateinit var transactionsViewModel: TransactionsViewModel
 
     // Views
-    private lateinit var toolbar: Toolbar
     private lateinit var list: RecyclerView
     private lateinit var swipeToRefresh: SwipeRefreshLayout
     private lateinit var progressBar: ProgressBar
@@ -77,7 +78,6 @@ class TransactionsFragment: Fragment(), TransactionClickListener {
         super.onViewCreated(view, savedInstanceState)
 
         // Bind views
-        toolbar = view.findViewById(R.id.toolbar)
         list = view.findViewById(R.id.list)
         swipeToRefresh = view.findViewById(R.id.swipe_refresh_layout)
         progressBar = view.findViewById(R.id.progress_bar)
@@ -85,7 +85,6 @@ class TransactionsFragment: Fragment(), TransactionClickListener {
         errorView = view.findViewById(R.id.error)
 
         // Setup UI components
-        setupToolbar()
         setupList()
 
         // Update UI if needed
@@ -139,18 +138,11 @@ class TransactionsFragment: Fragment(), TransactionClickListener {
             .attachToPauseLifecycle(this)
     }
 
-    private fun setupToolbar() {
-        toolbar.title = getString(when (type) {
-            TransactionOwnerType.ME -> R.string.transaction_owner_type_me
-            TransactionOwnerType.FRIENDS -> R.string.transaction_owner_type_Friends
-        })
-        toolbar.setTitleTextColor(resources.getColor(R.color.colorAccent))
-    }
-
     private fun setupList() {
         // Replace with DI
         adapter = TransactionsAdapter(context, this)
         list.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
+        list.addItemDecoration(SpacesItemDecoration(context!!, -1, -1, -1, -1, -1, -1, -1, 140))
         list.adapter = adapter
 
         // Swipe to refresh

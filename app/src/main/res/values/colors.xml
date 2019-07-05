@@ -3,6 +3,10 @@
     <color name="colorPrimary">#1B1D20</color>
     <color name="colorPrimaryDark">#1B1D20</color>
     <color name="colorAccent">#6E4EEC</color>
+    <color name="divider">#E3E5EA</color>
+
+    <!-- Transaction -->
+    <color name="bg_icon">#F5F7F9</color>
 
     <!-- Text -->
     <color name="text_primary">#1B1D20</color>

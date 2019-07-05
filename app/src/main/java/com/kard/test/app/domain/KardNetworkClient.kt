@@ -35,7 +35,7 @@ class KardNetworkClient {
         return when (ownerType) {
             TransactionOwnerType.ME -> Rx2Apollo.from(apolloClient.query(MeQuery.builder().build()))
             // Friends call not implemented
-            TransactionOwnerType.FRIENDS -> Rx2Apollo.from(apolloClient.query(MeQuery.builder().build()))
+            TransactionOwnerType.FRIENDS -> Observable.error(Exception("Friends data not available"))
         }
     }
 
